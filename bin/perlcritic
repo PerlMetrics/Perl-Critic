@@ -56,6 +56,7 @@ C<perlcritic> - Command-line interface to critique Perl source.
              [--files-with-violations | -l]
              [--files-without-violations | -L]
              [--program-extensions file_name_extension]
+             [--export-json filename.json]
              {FILE | DIRECTORY | STDIN}
 
   perlcritic --profile-proto

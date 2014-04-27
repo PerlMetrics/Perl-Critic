@@ -8,6 +8,7 @@ use English qw< -no_match_vars >;
 use Readonly;
 
 use Getopt::Long qw< GetOptions >;
+use JSON;
 use List::Util qw< first max >;
 use Pod::Usage qw< pod2usage >;
 
@@ -270,6 +271,20 @@ sub _critique {
         _report_statistics( $opts_ref, $stats );
     }
 
+    if ( $opts_ref->{'-export-json'} ) {
+        my $stats = $critic->statistics();
+        my %data = ( 
+            statistics => { 
+                lines               => $stats->{_lines},
+                lines_of_blank      => $stats->{_lines_of_blank},
+                lines_of_perl       => $stats->{_lines_of_perl},
+                lines_of_pod        => $stats->{_lines_of_pod},
+                total_violations    => $stats->{_total_violations},
+            } );
+        my $json_text = to_json(\%data);
+        printf "json: %s\n", $json_text;
+    }
+    
     return $number_of_violations, $had_error_in_file;
 }
 
@@ -511,6 +526,7 @@ sub _get_option_specification {
         files-with-violations|l
         files-without-violations|L
         program-extensions=s@
+        export-json=s
     >;
 }
 
